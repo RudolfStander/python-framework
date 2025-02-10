@@ -1,4 +1,4 @@
-from threading import synchronized_method
+from advanced_threading import synchronized_method
 from time import utc_now
 
 
@@ -43,12 +43,17 @@ class ProcessLock(object):
         self.process_locks = {}
 
     def __str__(self):
-        return "[ProcessLock%s]" % ("" if self.lock_for is None else " - %s" % self.lock_for)
+        return "[ProcessLock%s]" % (
+            "" if self.lock_for is None else " - %s" % self.lock_for
+        )
 
     # TODO: synchronize on process_key argument
     @synchronized_method
     def lock(self, process_key: str):
-        if process_key in self.process_locks and self.process_locks[process_key] is not None:
+        if (
+            process_key in self.process_locks
+            and self.process_locks[process_key] is not None
+        ):
             lock_instance = self.process_locks[process_key]
             print(
                 "WARN - %s lock already granted for process with key [%s] at [%s]"
