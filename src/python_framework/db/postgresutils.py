@@ -45,7 +45,7 @@ class ConnectionDetails:
         database="postgres",
         schema="public",
         dialect="postgresql",
-        driver="psycopg2",
+        driver="pg8000",
         disable_ssl=False,
     ):
         self.dialect = dialect

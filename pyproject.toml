@@ -3,6 +3,21 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
+name = "python_framework"
+version = "0.0.1"
+authors = [
+  { name="Rudolf Stander" },
+]
+description = "A collection of python libraries"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+license = "GPL-3.0-only"
+license-files = ["LICEN[CS]E*"]
+
 dependencies = [
   "werkzeug==2.0.1",
   "flask==2.0.1",
@@ -10,9 +25,24 @@ dependencies = [
   "python-dateutil==2.8.2",
   "requests==2.27.1",
   "colorama==0.4.3",
-  "psycopg2==2.9.1",
+  "pg8000==1.31.2",
   "sqlalchemy==1.4.23",
   "paho-mqtt==1.6.1"
 ]
 
 [tool]
+
+[tool.hatch.envs.hatch-build]
+installer = "pip"
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+  "/.github",
+  "/docs",
+  "/env",
+  "/example_app",
+  "/dist"
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/python_framework"]
