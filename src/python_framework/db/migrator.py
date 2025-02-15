@@ -5,8 +5,8 @@ from os import listdir
 
 from sqlalchemy import text
 
-from db.config import DBConfig
-from db.postgresutils import ConnectionDetails, create_transaction
+from python_framework.db.config import DBConfig
+from python_framework.db.postgresutils import ConnectionDetails, create_transaction
 
 MIGRATION_ID_REGEX = re.compile("V((\d)+_(\d)+)__.*")
 
@@ -19,7 +19,9 @@ class Migrator(object):
 
     def migrate(self):
         if self.service_db_config is None:
-            print("WARNING - Could not perform migrations. Service Context is not configured.")
+            print(
+                "WARNING - Could not perform migrations. Service Context is not configured."
+            )
             return False
 
         try:
@@ -67,7 +69,11 @@ class Migrator(object):
         for filename in filenames:
             id_search = MIGRATION_ID_REGEX.search(filename)
 
-            if id_search is None or id_search.group(1) is None or len(id_search.group(1)) < 3:
+            if (
+                id_search is None
+                or id_search.group(1) is None
+                or len(id_search.group(1)) < 3
+            ):
                 raise Exception(
                     "Invalid filename for migration. Could not determine migration ID: %s"
                     % filename
@@ -86,7 +92,9 @@ class Migrator(object):
         sorted_migrations = sort_migrations(migrations)
 
         for migration in sorted_migrations:
-            with open("%s/%s" % (self.migrations_path, migration["filename"]), "r") as file:
+            with open(
+                "%s/%s" % (self.migrations_path, migration["filename"]), "r"
+            ) as file:
                 contents = file.read()
                 checksum = sha256(contents.encode("UTF-8")).hexdigest()
 
@@ -98,7 +106,10 @@ class Migrator(object):
 
             self.migrations[migration["id"]] = migration
 
-            print("[%s - %s] - Migration loaded" % (migration["id"], migration["filename"]))
+            print(
+                "[%s - %s] - Migration loaded"
+                % (migration["id"], migration["filename"])
+            )
 
     def validate_migrations(self):
         load_query = MigrationLoadExistingEntriesQuery()
@@ -117,7 +128,11 @@ class Migrator(object):
             if result.migration_name != self.migrations[result.id]["filename"]:
                 raise Exception(
                     "Migration name mismatch for [%s]\n    persisted name: %s\n    loaded name: %s"
-                    % (result.id, result.migration_name, self.migrations[result.id]["filename"])
+                    % (
+                        result.id,
+                        result.migration_name,
+                        self.migrations[result.id]["filename"],
+                    )
                 )
 
             if result.checksum != self.migrations[result.id]["checksum"]:
@@ -143,11 +158,19 @@ class Migrator(object):
         for migration in sorted_migrations:
             print(
                 "Executing migration [%s - %s] for schema [%s]"
-                % (migration["id"], migration["filename"], self.service_db_config.schema_id)
+                % (
+                    migration["id"],
+                    migration["filename"],
+                    self.service_db_config.schema_id,
+                )
             )
 
-            execute_query(migration["ddl_query"], self.service_db_config, return_count_only=True)
-            insert_result = execute_query(migration["insert_query"], self.service_db_config)
+            execute_query(
+                migration["ddl_query"], self.service_db_config, return_count_only=True
+            )
+            insert_result = execute_query(
+                migration["insert_query"], self.service_db_config
+            )
 
             if insert_result is None or len(insert_result) == 0:
                 raise Exception(
@@ -155,7 +178,10 @@ class Migrator(object):
                     % (migration["id"], migration["filename"])
                 )
 
-            print("[%s - %s] - Migration executed" % (migration["id"], migration["filename"]))
+            print(
+                "[%s - %s] - Migration executed"
+                % (migration["id"], migration["filename"])
+            )
 
 
 def migration_sort_comparator(migration_1: dict, migration_2: dict):
@@ -270,7 +296,9 @@ class MigratorDDLQuery(object):
 
 def execute_query(query, database_config: DBConfig, return_count_only=False):
     if database_config is None:
-        print("WARNING - Could not perform migrations. Service Context is not configured.")
+        print(
+            "WARNING - Could not perform migrations. Service Context is not configured."
+        )
         return 0 if return_count_only else []
 
     sql, field_map = query.to_sql()

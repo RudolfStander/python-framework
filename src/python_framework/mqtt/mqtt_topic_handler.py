@@ -2,9 +2,9 @@ from typing import Any, Dict
 
 from paho.mqtt.client import MQTTMessage
 
-from config_utils import load_environment_variable
-from logger import ContextLogger, LogLevel
-from mqtt.mqtt_client import MQTTClient
+from python_framework.config_utils import load_environment_variable
+from python_framework.logger import ContextLogger, LogLevel
+from python_framework.mqtt.mqtt_client import MQTTClient
 
 TRACE_LOGGING_ENABLED = (
     load_environment_variable("MQTT_TRACE_LOGGING", default="false").lower() == "true"

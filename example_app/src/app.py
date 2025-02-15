@@ -81,7 +81,7 @@ def run():
         APIRoot.run()
     except:
         ContextLogger.sys_log(
-            LogLevel.ERROR, "error caught during app execution:", repr(exc_info())
+            LogLevel.ERROR, "error caught during app execution: %s" % repr(exc_info())
         )
         traceback.print_exc(file=stdout)
     finally:

@@ -1,8 +1,8 @@
 from sqlalchemy.engine.base import Connection
 
-from db.config import DBConfig
-from db.connection_pool import ConnectionPool, WaitableConnection
-from db.postgresutils import ConnectionDetails
+from python_framework.db.config import DBConfig
+from python_framework.db.connection_pool import ConnectionPool, WaitableConnection
+from python_framework.db.postgresutils import ConnectionDetails
 
 
 class TransactionManager(object):
@@ -11,7 +11,9 @@ class TransactionManager(object):
     _waitable_connection: WaitableConnection
 
     def __init__(
-        self, database_config: DBConfig = None, connection_details: ConnectionDetails = None
+        self,
+        database_config: DBConfig = None,
+        connection_details: ConnectionDetails = None,
     ) -> None:
         if connection_details is None:
             self._connection_details = ConnectionDetails.from_db_config(database_config)
@@ -21,10 +23,14 @@ class TransactionManager(object):
         self._waitable_connection = None
 
     def __enter__(self) -> Connection:
-        self._waitable_connection = ConnectionPool.get_pooled_connection(self._connection_details)
+        self._waitable_connection = ConnectionPool.get_pooled_connection(
+            self._connection_details
+        )
 
         if self._waitable_connection is None:
-            raise Exception("Failed to start transaction - could not get connection from pool")
+            raise Exception(
+                "Failed to start transaction - could not get connection from pool"
+            )
 
         try:
             connection = self._waitable_connection.start_transaction()

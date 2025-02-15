@@ -7,9 +7,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.engine import Connection
 from sqlalchemy.orm.session import Session
 
-from config_utils import load_environment_variable
-from db.config import DBConfig
-from logger import ContextLogger, LogLevel
+from python_framework.config_utils import load_environment_variable
+from python_framework.db.config import DBConfig
+from python_framework.logger import ContextLogger, LogLevel
 
 CONNECTION_POOL: List[Tuple["ConnectionDetails", Connection]] = []
 LOGGER_KEY = "POSTGRES_UTILS"
@@ -77,9 +77,6 @@ class ConnectionDetails:
     def get_connection_args(self):
         args = {}
 
-        if self.schema is not None:
-            args["options"] = "-csearch_path={}".format(self.schema)
-
         return args
 
     def get_key(self):
@@ -132,19 +129,26 @@ class ConnectionDetails:
             raise Exception(error_msg)
 
 
-def create_db_engine(connection_details, autocommit=False):
+def create_db_engine(connection_details: ConnectionDetails, autocommit=False):
     # TODO: exception handling here
+    engine = None
+
     if autocommit:
-        return create_engine(
+        engine = create_engine(
             connection_details.get_connection_string(),
             connect_args=connection_details.get_connection_args(),
             isolation_level="AUTOCOMMIT",
         )
     else:
-        return create_engine(
+        engine = create_engine(
             connection_details.get_connection_string(),
             connect_args=connection_details.get_connection_args(),
         )
+
+    if connection_details.schema is not None and len(connection_details.schema) > 0:
+        engine.execution_options(schema_translate_map={None: connection_details.schema})
+
+    return engine
 
 
 def create_connection(

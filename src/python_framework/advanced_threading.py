@@ -1,7 +1,7 @@
 from threading import Event, Lock, Thread
 from typing import Any, Callable, List
 
-from logger import ContextLogger, LogLevel
+from python_framework.logger import ContextLogger, LogLevel
 
 
 def synchronized(func):

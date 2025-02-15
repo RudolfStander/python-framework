@@ -4,11 +4,11 @@ from typing import Dict, List, Type
 from sqlalchemy import text
 from sqlalchemy.engine.base import Connection
 
-from config_utils import load_environment_variable
-from db.config import DBConfig
-from db.dao.objects import DAOQuery, DAORecord
-from db.transaction_manager import TransactionManager
-from logger import ContextLogger, LogLevel
+from python_framework.config_utils import load_environment_variable
+from python_framework.db.config import DBConfig
+from python_framework.db.dao.objects import DAOQuery, DAORecord
+from python_framework.db.transaction_manager import TransactionManager
+from python_framework.logger import ContextLogger, LogLevel
 
 # TODO: define returns of execute queries to be generic:
 # https://geekyisawesome.blogspot.com/2020/10/python-generic-methodsfunctions.html
@@ -95,7 +95,7 @@ class DAO(ABC):
         cls,
         database_config: DBConfig = None,
         connection: Connection = None,
-        **query_kwargs
+        **query_kwargs,
     ) -> List[Type[DAORecord]]:
         return cls.execute_query(
             SELECT_QUERY_KEY,
@@ -113,7 +113,7 @@ class DAO(ABC):
         cls,
         database_config: DBConfig = None,
         connection: Connection = None,
-        **query_kwargs
+        **query_kwargs,
     ) -> List[Type[DAORecord]]:
         return cls.execute_query(
             SELECT_ALL_QUERY_KEY,
@@ -131,7 +131,7 @@ class DAO(ABC):
         cls,
         database_config: DBConfig = None,
         connection: Connection = None,
-        **query_kwargs
+        **query_kwargs,
     ) -> List[Type[DAORecord]]:
         return cls.execute_query(
             INSERT_QUERY_KEY,
@@ -149,7 +149,7 @@ class DAO(ABC):
         cls,
         database_config: DBConfig = None,
         connection: Connection = None,
-        **query_kwargs
+        **query_kwargs,
     ) -> List[Type[DAORecord]]:
         return cls.execute_query(
             UPDATE_QUERY_KEY,
@@ -167,7 +167,7 @@ class DAO(ABC):
         cls,
         database_config: DBConfig = None,
         connection: Connection = None,
-        **query_kwargs
+        **query_kwargs,
     ) -> List[Type[DAORecord]]:
         return cls.execute_query(
             UPSERT_QUERY_KEY,
@@ -185,7 +185,7 @@ class DAO(ABC):
         cls,
         database_config: DBConfig = None,
         connection: Connection = None,
-        **query_kwargs
+        **query_kwargs,
     ) -> List[Type[DAORecord]]:
         return cls.execute_query(
             DELETE_QUERY_KEY,

@@ -2,5 +2,5 @@
 
 - [ ] DB interaction
 - [ ] controller
-- [ ] api
+- [ ] add option for either Fast API or Flask
 - [ ] main.py

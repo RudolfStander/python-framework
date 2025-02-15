@@ -8,11 +8,11 @@ from sqlalchemy import create_engine
 from sqlalchemy.engine.base import Connection, Engine, Transaction
 from sqlalchemy.pool import NullPool
 
-from config_utils import load_environment_variable
-from db.postgresutils import ConnectionDetails
-from logger import ContextLogger, LogLevel
-from thread_safe_cache import ThreadSafeCache
-from thread_safe_list import ThreadSafeList
+from python_framework.config_utils import load_environment_variable
+from python_framework.db.postgresutils import ConnectionDetails
+from python_framework.logger import ContextLogger, LogLevel
+from python_framework.thread_safe_cache import ThreadSafeCache
+from python_framework.thread_safe_list import ThreadSafeList
 
 LOGGER_KEY = "CONNECTION_POOL"
 
@@ -287,6 +287,14 @@ class ConnectionPool:
                 # pool_size=self._max_pool_size,
                 # pool_pre_ping=True,
             )
+
+            if (
+                self._connection_details.schema is not None
+                and len(self._connection_details.schema) > 0
+            ):
+                self._engine.execution_options(
+                    schema_translate_map={None: self._connection_details.schema}
+                )
 
             self.log(
                 "DB engine created, pool = [%s]" % (self._engine.pool), LogLevel.TRACE

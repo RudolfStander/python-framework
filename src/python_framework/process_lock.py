@@ -1,5 +1,5 @@
 from advanced_threading import synchronized_method
-from time import utc_now
+from python_framework.time import utc_now
 
 
 class LockInstance(object):

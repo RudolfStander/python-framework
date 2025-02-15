@@ -4,7 +4,7 @@ from flask import Flask
 from flask_cors import CORS
 from werkzeug import serving
 
-from dynamic_loader import load_submodules
+from python_framework.dynamic_loader import load_submodules
 
 parent_log_request = serving.WSGIRequestHandler.log_request
 
@@ -33,7 +33,9 @@ class APIRoot(object):
         return APIRoot.__instance
 
     @staticmethod
-    def initialize(application_name: str, host: str, port: int, resources_module: ModuleType):
+    def initialize(
+        application_name: str, host: str, port: int, resources_module: ModuleType
+    ):
         if APIRoot.__instance is not None:
             return APIRoot.__instance
 
@@ -59,7 +61,9 @@ class APIRoot(object):
 
     @staticmethod
     def run():
-        APIRoot.__instance.app.run(host=APIRoot.__instance.host, port=APIRoot.__instance.port)
+        APIRoot.__instance.app.run(
+            host=APIRoot.__instance.host, port=APIRoot.__instance.port
+        )
 
     @staticmethod
     def stop():
